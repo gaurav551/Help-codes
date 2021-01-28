@@ -1,0 +1,33 @@
+Connect To Local Server(Trusted Connection)
+sqlcmd -S DESKTOP-7EO032A\SQLEXPRESS -E
+------------
+
+Connect To Remote Server
+sqlcmd -S 69.10.33.34 -U pathshala -P P@$$w0Rd
+
+-----------
+Show DB 
+select name from sys.databases
+go
+
+-----------
+Describe Table
+exec sp_help TABLE_NAME
+
+-----------
+Delete data from a database
+EXEC sp_MSForEachTable 'ALTER TABLE ? NOCHECK CONSTRAINT ALL'
+
+EXEC sp_MSForEachTable 'ALTER TABLE ? DISABLE TRIGGER ALL'
+
+EXEC sp_MSForEachTable 'DELETE FROM ?'
+
+EXEC sp_MSForEachTable 'ALTER TABLE ? CHECK CONSTRAINT ALL'
+
+EXEC sp_MSForEachTable 'ALTER TABLE ? ENABLE TRIGGER ALL'
+
+EXEC sp_MSFOREACHTABLE 'SELECT * FROM ?'
+
+GO
+----------
+insert into school values("daafb593-1712-46fa-b328-1accb510a99d","Emerald","Education","2020-08-23 03:35:31.9597122",1,"2020-08-23 03:35:31.9597122","emeral@aaa.com","9814913728")
