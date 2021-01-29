@@ -1,0 +1,186 @@
+_BackUpDatabase
+///
+@if(!ViewBag.FileName.Contains("SqlException"))
+{
+<div class="dash-form">
+<p>BACKUP SUCCESS</p>
+<a asp-action="Download" asp-route-id="@ViewBag.FileName"><i class="fa fa-download"> DOWNLOAD</i></a>
+</div>
+}
+else
+{
+    <p>@ViewBag.FileName</p>
+}
+
+
+Index
+///
+
+@inject TipsService tip
+<link href="/assets/css/snackbar.css" rel="stylesheet">
+
+<div class="main-content" id="content-wrapper">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-lg-12 clear-padding-xs">
+				<h5 class="page-title"><i class="fa fa-bar-chart"></i>BACKUP and RECOVERY</h5>
+				<div class="section-divider"></div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-12 clear-padding-xs">
+				@await Html.PartialAsync("_TipsPartial", new TipsViewModel {Text = "Backup data", Show=tip.IsShown() })
+				<div class="col-lg-12">
+					<div class="dash-item first-dash-item">
+                        @if(TempData["Result"]!=null)
+                        {
+                            <p>@TempData["Result"]</p>
+                        }
+
+
+						<h6 class="item-title"><i class="fa fa-book"></i>BACKUP DATA</h6>
+						<div class="inner-item">
+                         <div class="dash-form">
+								<a class="save" style="cursor: pointer;" onclick="backUp()" >BACKUP</a>
+						 </div>
+
+							 
+							<div class="clearfix"></div>
+						</div>
+
+					</div>
+                    <div class="dash-item">
+
+
+						<h6 class="item-title"><i class="fa fa-book"></i>RECENT BACKUPS</h6>
+						<div class="inner-item">
+                               @if(ViewBag.RecentBackups.Count==0)
+                               {
+                                   <p>NO ANY BACKUP FOUND</p>
+                               }
+                               else
+                               {
+                          
+                       				<table class="table">
+											<thead>
+												<tr>
+													
+													<th><i class="fa fa-envelope-o"></i> Backup</th>
+
+													<th><i class="fa fa-tasks"></i> ACTION</th>
+												</tr>
+											</thead>
+											<tbody>
+												@foreach(var x in ViewBag.RecentBackups)
+												{
+												<tr>
+												
+													<td>@x</td>
+													<td class="action-link">
+	                                                <a class="edit" id="" style="cursor: pointer;" asp-action="RestoreDatabaseFromBackup" asp-route-id="@x" onclick="return confirm('Are you sure to recover this Backup? Note: your existing data will be lost')" ><i class="fa fa-rotate-right"></i></a>
+													<a class="delete"  style="cursor: pointer;" asp-action="DeleteBackup" asp-route-id="@x" onclick="return confirm('Are you sure to remove this Backup? if you have downloaded a copy of the backup you can restore from downloaded file')" ><i class="fa fa-remove"></i></a>                                                         
+														
+
+													</td>
+												</tr>
+												}
+
+											</tbody>
+										</table>
+                               }
+                       		
+
+							
+							<div class="clearfix"></div>
+						</div>
+
+					</div>
+					<div class="dash-item">
+
+
+						<h6 class="item-title"><i class="fa fa-book"></i>RESTORE FROM FILE</h6>
+						<div class="inner-item">
+                            <div class="dash-form">
+								<a class="save" style="cursor: pointer;" data-toggle="modal" data-target="#restoreModal" >RESTORE</a>
+						 </div>
+							
+							<div class="clearfix"></div>
+						</div>
+
+					</div>
+					
+
+
+
+				</div>
+
+			</div>
+		</div>
+
+
+	</div>
+    <div id="editDetailModal" class="modal fade" role="dialog">
+					<div class="modal-dialog">
+						<!-- Modal content-->
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h4 class="modal-title"><i class="fa fa-edit"></i>BACKUP</h4>
+							</div>
+							<div class="modal-body">
+								
+
+							</div>
+							
+						</div>
+					</div>
+				</div>
+
+        <div class="modal fade" id="restoreModal" role="dialog">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content login-modal">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title"><i class="fa fa-sign-in"></i>RESTORE DATA</h4>
+					</div>
+					<div class="modal-bodyrestore">
+						 <form asp-action="RestoreDatabaseFromFile"  method="POST" enctype="multipart/form-data"> 
+						<div>
+							<label><i class="fa fa-user"></i>Please choose .bak File</label>
+							<input class="form-control" id="file" name="file" type="file">
+						</div>
+                        <br>
+						<button class="btn btn-primary" type="submit" > RESTORE </button>
+						</form> 
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	<div class="dash-footer col-lg-12">
+		<p>Copyright Pathshala</p>
+	</div>
+</div>
+
+<div class="menu-togggle-btn">
+	<a href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars"></i></a>
+</div>
+
+<script src="/dash/assets/js/jQuery_v3_2_0.min.js"></script>
+<script src="~/assets/js/snackbar.js" asp-append-version="true"></script>
+<script>
+  function backUp() {
+     {
+		   $('.modal-body').empty().html("<h4>Please wait while Data backup in progress</h4>");
+
+            $.get("@Url.Action("BackupDatabase","BackupAndRestore")",
+                function (data) {
+                    $('.modal-body').html(data);
+                });
+
+                $("#editDetailModal").modal("show");
+        }
+  }
+   
+  </script>
