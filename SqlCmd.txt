@@ -1,9 +1,9 @@
 Connect To Local Server(Trusted Connection)
-sqlcmd -S DESKTOP-7EO032A\SQLEXPRESS -E
+sqlcmd -S DESKKTOP-7E3O032A\SQLEXPRESS -E
 ------------
 
 Connect To Remote Server
-sqlcmd -S 69.10.33.34 -U pathshala -P P@$$w0Rd
+sqlcmd -S 61.12.88.33 -U username -P dbPassword
 
 -----------
 Show DB 
